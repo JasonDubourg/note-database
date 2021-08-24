@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +49,12 @@ public class PatientNoteControllerTest {
     @Test
     void findAllPatientsNotes() throws Exception {
         // ARRANGE
-        when(patientNoteRepository.findAll()).thenReturn(new ArrayList<>());
+        PatientNote patientNote1 = new PatientNote(1, "Note1");
+        PatientNote patientNote2 = new PatientNote(2, "Note2");
+        List<PatientNote> patientNoteList = new ArrayList<PatientNote>();
+        patientNoteList.add(patientNote1);
+        patientNoteList.add(patientNote2);
+        when(patientNoteRepository.findAll()).thenReturn(patientNoteList);
         // ACT
         MvcResult mvcResult = this.mockMvc.perform(get("/patientsNotes")).andDo(print()).andReturn();
         int status = mvcResult.getResponse().getStatus();
@@ -83,7 +89,7 @@ public class PatientNoteControllerTest {
         MvcResult mvcResult = mockMvc.perform(delete("/patient-note/" + id).contentType(MediaType.APPLICATION_JSON)).andDo(print()).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         // ASSERT
-        assertEquals(200, response.getStatus());
+        assertEquals(204, response.getStatus());
         verify(patientNoteRepository, times(1)).delete(patientNoteToDelete);
     }
 

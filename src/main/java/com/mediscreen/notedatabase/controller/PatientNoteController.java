@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,7 +73,7 @@ public class PatientNoteController {
     @ApiOperation(value = "Supprime la note d'un patient")
     @ApiResponses(value = {@ApiResponse(code = 404, message = "The patient with id {id} to delete note doesn't exist in database")})
     @DeleteMapping(value = "/patient-note/{patientId}")
-    public String deletePatientNote(@PathVariable(value = "patientId") int patientId){
+    public ResponseEntity<?> deletePatientNote(@PathVariable(value = "patientId") int patientId){
         PatientNote patientNoteToDelete = patientNoteRepository.findPatientNoteByPatientId(patientId);
         String result = "Patient note successfully deleted";
         if(Objects.isNull(patientNoteToDelete)){
@@ -80,6 +81,6 @@ public class PatientNoteController {
         } else {
             patientNoteRepository.delete(patientNoteToDelete);
         }
-        return result;
+        return ResponseEntity.noContent().build();
     }
 }
